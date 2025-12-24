@@ -18,6 +18,7 @@ int main(int argc, char *argv[]) {
 	bool new_file = false;
   int c = 0;
   char *file_path = NULL;
+  int dbfd = -1;
 
   while ((c = getopt(argc, argv, "nf:")) != -1) {
     switch (c) {
@@ -39,6 +40,22 @@ int main(int argc, char *argv[]) {
     print_usage(argv);
     return EXIT_SUCCESS;
   }
+
+  if (new_file) {
+    dbfd = create_db_file(file_path);
+    if (dbfd == STATUS_ERROR){ 
+      printf("Unable to create_db_file\n");
+      return EXIT_FAILURE;
+    }
+  } else {
+    dbfd = open_db_file(file_path);
+    if (dbfd == STATUS_ERROR) {
+      printf("Unable to open db file\n");
+      return EXIT_FAILURE;
+    }
+  }
+
+
   printf("new_file: %d\n", new_file);
   printf("file_path: %s\n", file_path);
 
